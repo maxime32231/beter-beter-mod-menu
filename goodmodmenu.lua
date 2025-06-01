@@ -17,44 +17,92 @@ local dot = Instance.new("TextButton", gui)
 dot.Size = UDim2.new(0, 25, 0, 25)
 dot.Position = UDim2.new(0, 10, 0, 10)
 dot.Text = "+"
-dot.Font = Enum.Font.SourceSansBold
+dot.Font = Enum.Font.GothamBold
 dot.TextSize = 20
 dot.TextColor3 = Color3.new(1, 1, 1)
-dot.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+dot.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+dot.AutoButtonColor = false
 dot.Visible = false
-dot.AutoButtonColor = true
 dot.ZIndex = 10
+local dotCorner = Instance.new("UICorner", dot)
+dotCorner.CornerRadius = UDim.new(0, 6)
+
+dot.MouseEnter:Connect(function()
+    dot.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+end)
+dot.MouseLeave:Connect(function()
+    dot.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+end)
 
 -- Main Frame
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 300, 0, 280)
+frame.Size = UDim2.new(0, 320, 0, 300)
 frame.Position = UDim2.new(0.05, 0, 0.1, 0)
-frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+frame.BackgroundColor3 = Color3.fromRGB(35, 35, 40) -- slightly lighter and cooler
 frame.Active = true
 frame.Draggable = true
 frame.ZIndex = 10
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
 frame.Name = "MainFrame"
+local frameCorner = Instance.new("UICorner", frame)
+frameCorner.CornerRadius = UDim.new(0, 12)
 
--- UI Corner for rounded edges
-local uiCorner = Instance.new("UICorner", frame)
-uiCorner.CornerRadius = UDim.new(0, 10)
+-- Shadow (optional)
+local shadow = Instance.new("ImageLabel", frame)
+shadow.Size = UDim2.new(1, 14, 1, 14)
+shadow.Position = UDim2.new(0, -7, 0, -7)
+shadow.BackgroundTransparency = 1
+shadow.ZIndex = 0
+shadow.Image = "rbxassetid://1316045217" -- shadow image
+shadow.ImageColor3 = Color3.new(0, 0, 0)
+shadow.ImageTransparency = 0.7
 
 -- Title
 local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(1, 0, 0, 35)
-title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+title.Size = UDim2.new(1, 0, 0, 40)
+title.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
 title.Text = "MOD MENU BY MAXIME"
 title.TextColor3 = Color3.new(1, 1, 1)
 title.Font = Enum.Font.GothamBold
-title.TextSize = 20
+title.TextSize = 24
 title.BorderSizePixel = 0
 
--- Helper function to create slider
+local titleCorner = Instance.new("UICorner", title)
+titleCorner.CornerRadius = UDim.new(0, 12)
+
+-- Close button
+local closeBtn = Instance.new("TextButton", title)
+closeBtn.Size = UDim2.new(0, 30, 1, 0)
+closeBtn.Position = UDim2.new(1, -40, 0, 0)
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 22
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
+closeBtn.AutoButtonColor = false
+local closeCorner = Instance.new("UICorner", closeBtn)
+closeCorner.CornerRadius = UDim.new(0, 6)
+
+closeBtn.MouseEnter:Connect(function()
+    closeBtn.BackgroundColor3 = Color3.fromRGB(220, 70, 70)
+end)
+closeBtn.MouseLeave:Connect(function()
+    closeBtn.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
+end)
+
+-- Toggle GUI function
+local function toggleGui()
+	frame.Visible = not frame.Visible
+	dot.Visible = not dot.Visible
+end
+closeBtn.MouseButton1Click:Connect(toggleGui)
+dot.MouseButton1Click:Connect(toggleGui)
+
+-- Helper function to create sliders with better spacing
 local function createSlider(parent, name, posY, min, max, default)
 	local label = Instance.new("TextLabel", parent)
-	label.Size = UDim2.new(0, 120, 0, 25)
+	label.Size = UDim2.new(0, 130, 0, 25)
 	label.Position = UDim2.new(0, 15, 0, posY)
 	label.Text = name
 	label.TextColor3 = Color3.new(1, 1, 1)
@@ -64,37 +112,36 @@ local function createSlider(parent, name, posY, min, max, default)
 	
 	local sliderFrame = Instance.new("Frame", parent)
 	sliderFrame.Size = UDim2.new(0, 150, 0, 20)
-	sliderFrame.Position = UDim2.new(0, 140, 0, posY+3)
-	sliderFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	sliderFrame.Position = UDim2.new(0, 150, 0, posY + 3)
+	sliderFrame.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 	sliderFrame.ClipsDescendants = true
 	sliderFrame.Name = name.."Slider"
 	local corner = Instance.new("UICorner", sliderFrame)
-	corner.CornerRadius = UDim.new(0, 8)
+	corner.CornerRadius = UDim.new(0, 10)
 	
 	local fill = Instance.new("Frame", sliderFrame)
 	fill.Size = UDim2.new((default - min)/(max - min), 0, 1, 0)
-	fill.BackgroundColor3 = Color3.fromRGB(100, 200, 255)
+	fill.BackgroundColor3 = Color3.fromRGB(70, 170, 255)
 	fill.Name = "Fill"
 	local fillCorner = Instance.new("UICorner", fill)
-	fillCorner.CornerRadius = UDim.new(0, 8)
+	fillCorner.CornerRadius = UDim.new(0, 10)
 	
 	local thumb = Instance.new("ImageButton", sliderFrame)
-	thumb.Size = UDim2.new(0, 18, 0, 20)
+	thumb.Size = UDim2.new(0, 20, 0, 20)
 	thumb.Position = UDim2.new(fill.Size.X.Scale, 0, 0, 0)
 	thumb.BackgroundTransparency = 1
 	thumb.Name = "Thumb"
-	thumb.Image = "rbxassetid://3570695787" -- small white circle image
+	thumb.Image = "rbxassetid://3570695787" -- white circle
 	
 	local valueLabel = Instance.new("TextLabel", parent)
-	valueLabel.Size = UDim2.new(0, 40, 0, 25)
-	valueLabel.Position = UDim2.new(0, 295, 0, posY)
+	valueLabel.Size = UDim2.new(0, 45, 0, 25)
+	valueLabel.Position = UDim2.new(0, 305, 0, posY)
 	valueLabel.TextColor3 = Color3.new(1,1,1)
 	valueLabel.Font = Enum.Font.Gotham
 	valueLabel.TextSize = 16
 	valueLabel.BackgroundTransparency = 1
 	valueLabel.Text = tostring(default)
 	
-	-- Value update function
 	local function updateSlider(inputPosX)
 		local relativeX = math.clamp(inputPosX - sliderFrame.AbsolutePosition.X, 0, sliderFrame.AbsoluteSize.X)
 		local scale = relativeX / sliderFrame.AbsoluteSize.X
@@ -128,30 +175,40 @@ local function createSlider(parent, name, posY, min, max, default)
 		end
 	end)
 	
-	-- Initialize values
-	humanoid.WalkSpeed = default
-	humanoid.JumpPower = default
+	-- Set initial values only if sliders are for Walk Speed or Jump Height
+	if name == "Walk Speed" then
+		humanoid.WalkSpeed = default
+	elseif name == "Jump Height" then
+		humanoid.JumpPower = default
+	end
 	
 	return sliderFrame, valueLabel
 end
 
 -- Create sliders
-local walkSlider, walkValue = createSlider(frame, "Walk Speed", 55, 8, 100, 16)
-local jumpSlider, jumpValue = createSlider(frame, "Jump Height", 95, 20, 150, 50)
+local walkSlider, walkValue = createSlider(frame, "Walk Speed", 60, 8, 100, 16)
+local jumpSlider, jumpValue = createSlider(frame, "Jump Height", 110, 20, 150, 50)
 
 -- Wall Hack Button
 local noclip = false
 local wallBtn = Instance.new("TextButton", frame)
-wallBtn.Size = UDim2.new(0, 270, 0, 30)
-wallBtn.Position = UDim2.new(0, 15, 0, 140)
-wallBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+wallBtn.Size = UDim2.new(0, 300, 0, 35)
+wallBtn.Position = UDim2.new(0, 10, 0, 160)
+wallBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 wallBtn.TextColor3 = Color3.new(1, 1, 1)
 wallBtn.Font = Enum.Font.Gotham
 wallBtn.TextSize = 18
 wallBtn.Text = "Wall Hack: OFF"
 wallBtn.AutoButtonColor = false
 local wallCorner = Instance.new("UICorner", wallBtn)
-wallCorner.CornerRadius = UDim.new(0, 8)
+wallCorner.CornerRadius = UDim.new(0, 10)
+
+wallBtn.MouseEnter:Connect(function()
+	wallBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+end)
+wallBtn.MouseLeave:Connect(function()
+	wallBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+end)
 
 wallBtn.MouseButton1Click:Connect(function()
 	noclip = not noclip
@@ -160,18 +217,24 @@ end)
 
 -- Dance Button
 local danceBtn = Instance.new("TextButton", frame)
-danceBtn.Size = UDim2.new(0, 270, 0, 30)
-danceBtn.Position = UDim2.new(0, 15, 0, 185)
-danceBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+danceBtn.Size = UDim2.new(0, 300, 0, 35)
+danceBtn.Position = UDim2.new(0, 10, 0, 210)
+danceBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 danceBtn.TextColor3 = Color3.new(1, 1, 1)
 danceBtn.Font = Enum.Font.Gotham
 danceBtn.TextSize = 18
 danceBtn.Text = "Dance"
 danceBtn.AutoButtonColor = false
 local danceCorner = Instance.new("UICorner", danceBtn)
-danceCorner.CornerRadius = UDim.new(0, 8)
+danceCorner.CornerRadius = UDim.new(0, 10)
 
--- Corrected dance animation
+danceBtn.MouseEnter:Connect(function()
+	danceBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+end)
+danceBtn.MouseLeave:Connect(function()
+	danceBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+end)
+
 local danceAnimId = "rbxassetid://507771019"
 local danceTrack
 
@@ -193,112 +256,68 @@ end)
 -- Fly Button
 local flying = false
 local flyBtn = Instance.new("TextButton", frame)
-flyBtn.Size = UDim2.new(0, 270, 0, 30)
-flyBtn.Position = UDim2.new(0, 15, 0, 230)
-flyBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+flyBtn.Size = UDim2.new(0, 300, 0, 35)
+flyBtn.Position = UDim2.new(0, 10, 0, 260)
+flyBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 flyBtn.TextColor3 = Color3.new(1, 1, 1)
 flyBtn.Font = Enum.Font.Gotham
 flyBtn.TextSize = 18
-flyBtn.Text = "Fly: OFF"
+flyBtn.Text = "Fly"
 flyBtn.AutoButtonColor = false
 local flyCorner = Instance.new("UICorner", flyBtn)
-flyCorner.CornerRadius = UDim.new(0, 8)
+flyCorner.CornerRadius = UDim.new(0, 10)
+
+flyBtn.MouseEnter:Connect(function()
+	flyBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+end)
+flyBtn.MouseLeave:Connect(function()
+	flyBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+end)
 
 local bodyVelocity
-local bodyGyro
 
 flyBtn.MouseButton1Click:Connect(function()
 	flying = not flying
 	if flying then
-		flyBtn.Text = "Fly: ON"
-		if not bodyVelocity then
-			bodyVelocity = Instance.new("BodyVelocity")
-			bodyVelocity.MaxForce = Vector3.new(1e5, 1e5, 1e5)
-			bodyVelocity.Velocity = Vector3.new(0, 0, 0)
-			bodyVelocity.Parent = char.HumanoidRootPart
-		end
-		if not bodyGyro then
-			bodyGyro = Instance.new("BodyGyro")
-			bodyGyro.MaxTorque = Vector3.new(1e5, 1e5, 1e5)
-			bodyGyro.CFrame = char.HumanoidRootPart.CFrame
-			bodyGyro.Parent = char.HumanoidRootPart
-		end
+		flyBtn.Text = "Stop Flying"
+		bodyVelocity = Instance.new("BodyVelocity", char.PrimaryPart)
+		bodyVelocity.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+		bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+		
+		RunService:BindToRenderStep("FlyMovement", Enum.RenderPriority.Character.Value + 1, function()
+			if flying and bodyVelocity then
+				local direction = Vector3.new()
+				if UserInputService:IsKeyDown(Enum.KeyCode.W) then direction = direction + workspace.CurrentCamera.CFrame.LookVector end
+				if UserInputService:IsKeyDown(Enum.KeyCode.S) then direction = direction - workspace.CurrentCamera.CFrame.LookVector end
+				if UserInputService:IsKeyDown(Enum.KeyCode.A) then direction = direction - workspace.CurrentCamera.CFrame.RightVector end
+				if UserInputService:IsKeyDown(Enum.KeyCode.D) then direction = direction + workspace.CurrentCamera.CFrame.RightVector end
+				direction = Vector3.new(direction.X, 0, direction.Z).Unit * 50
+				if direction ~= direction then -- if NaN, fallback
+					direction = Vector3.new(0, 0, 0)
+				end
+				bodyVelocity.Velocity = direction + Vector3.new(0, 0, 0)
+			end
+		end)
 	else
-		flyBtn.Text = "Fly: OFF"
+		flyBtn.Text = "Fly"
+		RunService:UnbindFromRenderStep("FlyMovement")
 		if bodyVelocity then
 			bodyVelocity:Destroy()
 			bodyVelocity = nil
 		end
-		if bodyGyro then
-			bodyGyro:Destroy()
-			bodyGyro = nil
-		end
 	end
 end)
 
--- Fly movement control
-RunService.Heartbeat:Connect(function()
-	if flying and bodyVelocity and bodyGyro then
-		local camCF = workspace.CurrentCamera.CFrame
-		local moveVec = Vector3.new(0, 0, 0)
-		
-		if UserInputService:IsKeyDown(Enum.KeyCode.W) then
-			moveVec = moveVec + camCF.LookVector
-		end
-		if UserInputService:IsKeyDown(Enum.KeyCode.S) then
-			moveVec = moveVec - camCF.LookVector
-		end
-		if UserInputService:IsKeyDown(Enum.KeyCode.A) then
-			moveVec = moveVec - camCF.RightVector
-		end
-		if UserInputService:IsKeyDown(Enum.KeyCode.D) then
-			moveVec = moveVec + camCF.RightVector
-		end
-		moveVec = moveVec.Unit * 50
-		
-		if moveVec.Magnitude > 0 then
-			bodyVelocity.Velocity = Vector3.new(moveVec.X, 0, moveVec.Z)
-			bodyGyro.CFrame = camCF
-		else
-			bodyVelocity.Velocity = Vector3.new(0, 0, 0)
-		end
-	end
-end)
-
--- Toggle GUI with dot button
-local function toggleGui()
-	frame.Visible = not frame.Visible
-	dot.Visible = not dot.Visible
-end
-
-dot.MouseButton1Click:Connect(toggleGui)
-
--- Close button in the GUI title
-local closeBtn = Instance.new("TextButton", title)
-closeBtn.Size = UDim2.new(0, 30, 1, 0)
-closeBtn.Position = UDim2.new(1, -35, 0, 0)
-closeBtn.Text = "X"
-closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextSize = 20
-closeBtn.TextColor3 = Color3.new(1, 1, 1)
-closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-closeBtn.AutoButtonColor = false
-closeBtn.Name = "CloseButton"
-local closeCorner = Instance.new("UICorner", closeBtn)
-closeCorner.CornerRadius = UDim.new(0, 6)
-
-closeBtn.MouseButton1Click:Connect(toggleGui)
-
--- Noclip logic (wall hack)
+-- Noclip implementation
 RunService.Stepped:Connect(function()
 	if noclip then
-		for _, part in pairs(char:GetDescendants()) do
+		for _, part in ipairs(char:GetChildren()) do
 			if part:IsA("BasePart") and part.CanCollide then
 				part.CanCollide = false
 			end
 		end
 	else
-		for _, part in pairs(char:GetDescendants()) do
+		for _, part in ipairs(char:GetChildren()) do
 			if part:IsA("BasePart") and not part.CanCollide then
 				part.CanCollide = true
 			end
@@ -306,6 +325,6 @@ RunService.Stepped:Connect(function()
 	end
 end)
 
--- Start with default WalkSpeed and JumpPower set
-humanoid.WalkSpeed = 16
-humanoid.JumpPower = 50
+-- Initially visible
+frame.Visible = true
+dot.Visible = false
